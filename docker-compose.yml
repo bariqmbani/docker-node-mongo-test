@@ -1,15 +1,26 @@
 version: '3'
 services:
   app:
-    container_name: docker-node-mongo
+    container_name: docker-node-test
     restart: always
     build: .
     ports:
       - '80:3000'
     links:
-      - mongo
+      - 'mongo'
+
   mongo:
-    container_name: mongo
-    image: mongo
+    container_name: docker-mongo-test
+    image: mongo:4.2
+    restart: always
     ports:
-      - '27017:27017'
+      - '1244:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: test123123
+      MONGO_INITDB_DATABASE: test_db
+      DATABASE_USERNAME: test
+      DATABASE_PASSWORD: test123123
+    volumes:
+      - ./data:/data/db
+      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
